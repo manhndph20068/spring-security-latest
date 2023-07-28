@@ -110,15 +110,6 @@ public class ProductController {
     }
 
 
-//    private void createRefreshTokenCookie(HttpServletResponse response, String token) {
-//        String cookieName = "refreshToken";
-//        String cookieValue = token;
-//        int maxAgeInSeconds = 60000;
-//        boolean httpOnly = true;
-//
-//        CookieUtil.create(response, cookieName, cookieValue, httpOnly, maxAgeInSeconds);
-//    }
-
     @GetMapping("/fetchAccount")
     public UserInfo fetchAccountInfo(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
