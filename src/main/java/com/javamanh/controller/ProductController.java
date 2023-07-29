@@ -78,7 +78,7 @@ public class ProductController {
             UserInfo userInfo = new UserInfo(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
             return JwtResponse.builder()
                     .accessToken(accessToken)
-                    .token(refreshToken.getToken())
+                    .refreshToken(refreshToken.getToken())
                     .userInfo(userInfo)
                     .build();
         } else {
@@ -103,7 +103,7 @@ public class ProductController {
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
-                .token(refreshTokenFromCookie)
+                .refreshToken(refreshTokenFromCookie)
                 .build();
     }
 
