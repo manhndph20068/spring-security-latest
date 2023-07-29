@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Product> getAllTheProducts() {
         return service.getProducts();
     }
@@ -98,10 +98,8 @@ public class ProductController {
             throw new RuntimeException("Refresh token has expired. Please make a new signin request");
         }
 
-
         String email = jwtService.extractUsernameFromRefreshToken(refreshTokenFromCookie);
         String accessToken = jwtService.generateToken(email);
-
 
         return JwtResponse.builder()
                 .accessToken(accessToken)

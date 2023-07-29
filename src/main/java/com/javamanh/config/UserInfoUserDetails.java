@@ -16,11 +16,17 @@ public class UserInfoUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public UserInfoUserDetails(UserInfo userInfo) {
-        name=userInfo.getEmail();
-        password=userInfo.getPassword();
-        authorities= Arrays.stream(userInfo.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    name = userInfo.getEmail();
+    password = userInfo.getPassword();
+    authorities = Arrays.stream(userInfo.getRole().getName().split(","))  // Giả sử getName() trả về danh sách các roles tách bằng dấu ","
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+
+        // ko dùng stream
+//    authorities = new ArrayList<>();
+//    for (String role : userInfo.getRole().getName().split(",")) {
+//        authorities.add(new SimpleGrantedAuthority(role));
+//    }
     }
 
     @Override
