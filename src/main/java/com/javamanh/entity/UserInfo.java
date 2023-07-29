@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +30,6 @@ public class UserInfo {
     private String name;
     private String email;
     private String password;
-//    private String roles;
-//
-//    public UserInfo(String name, String password, Collection<? extends GrantedAuthority> authorities) {
-//        this.name = name;
-//        this.password = password;
-//        this.roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-//    }
 
     @ManyToOne
     @JoinColumn(name = "id_roles")
@@ -46,13 +40,19 @@ public class UserInfo {
         this.password = password;
 
         // Tạo danh sách các role từ các đối tượng GrantedAuthority
-        List<String> roleNames = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+//        List<String> roleNames = authorities.stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.toList());
+
+
+        List<String> roleNames = new ArrayList<>();
+        for (GrantedAuthority authority : authorities) {
+            roleNames.add(authority.getAuthority());
+        }
 
         // Tạo đối tượng Role từ tên của role (trong trường hợp này chỉ lưu một role cho mỗi người dùng)
         if (!roleNames.isEmpty()) {
-            String roleName = roleNames.get(0); // Giả sử chỉ lưu một role
+            String roleName = roleNames.get(0);
             this.role = new Role(roleName);
         }
     }
