@@ -29,7 +29,7 @@ public class JwtService {
 
     public String extractEmail(String token) {
         Claims claims = extractAllClaims(token);
-        System.out.println("Claims: " + claims); // Log giá trị của Claims
+        System.out.println("Claims: " + claims);
         return extractClaim(token, claims1 -> claims.get("sub", String.class));
     }
 

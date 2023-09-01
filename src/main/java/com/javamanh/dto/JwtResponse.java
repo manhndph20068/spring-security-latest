@@ -1,6 +1,6 @@
 package com.javamanh.dto;
 
-import com.javamanh.entity.UserInfo;
+import com.javamanh.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +14,6 @@ public class JwtResponse {
 
     private String accessToken;
     private String refreshToken;
-    private UserInfo userInfo;
+    private Account userInfo;
+    private String message;
 }

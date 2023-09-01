@@ -1,7 +1,7 @@
 package com.javamanh.service;
 
 import com.javamanh.dto.Product;
-import com.javamanh.entity.UserInfo;
+import com.javamanh.entity.Account;
 import com.javamanh.repository.UserInfoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ProductService {
     }
 
 
-    public String addUser(UserInfo userInfo) {
+    public String addUser(Account userInfo) {
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         repository.save(userInfo);
         return "user added to system ";

@@ -43,7 +43,7 @@ public class RefreshTokenService {
 
     private void setRefreshTokenCookie(String refreshToken,HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         cookie.setMaxAge(REFRESH_TOKEN_EXPIRATION_TIME_SECONDS);
         cookie.setPath("/");
         response.addCookie(cookie);

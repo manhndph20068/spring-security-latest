@@ -1,6 +1,6 @@
 package com.javamanh.config;
 
-import com.javamanh.entity.UserInfo;
+import com.javamanh.entity.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ public class UserInfoUserDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoUserDetails(UserInfo userInfo) {
+    public UserInfoUserDetails(Account userInfo) {
     name = userInfo.getEmail();
     password = userInfo.getPassword();
     authorities = Arrays.stream(userInfo.getRole().getName().split(","))  // Giả sử getName() trả về danh sách các roles tách bằng dấu ","
