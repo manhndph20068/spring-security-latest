@@ -147,20 +147,51 @@ public class ShoeServiceImpl implements IShoeService {
 //    }
 
     @Override
+    public ServiceResult<Shoe> resultValidate(String mess) {
+        return new ServiceResult<>(AppConstant.FAIL, mess, null);
+    }
+
+    @Override
+    public String validateNhanVien(ShoeRequest shoeRequest) {
+        List<String> errorMessages = new ArrayList<>();
+        if (shoeRequest.getName() == null || shoeRequest.getStatusShoe() == null) {
+            errorMessages.add("Thông tin giày không được để trống");
+        }
+        for (ShoeDetail requestShoeDetail : shoeRequest.getShoeDetailList()) {
+            if (requestShoeDetail.getPriceInput() == null) {
+                errorMessages.add("Thuộc tính không được để trống");
+            }
+        }
+        if (errorMessages.size() > 0) {
+            return String.join(", ", errorMessages);
+        }
+        else {
+            return null;
+        }
+
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ServiceResult<Shoe> addNewShoe(ShoeRequest shoeRequest) {
-        try {
-            Shoe shoe = createShoe(shoeRequest);
-            for (ShoeDetail requestShoeDetail : shoeRequest.getShoeDetailList()) {
-                ShoeDetail shoeDetail = createShoeDetail(shoe, requestShoeDetail);
-                saveThumbnails(shoeDetail, requestShoeDetail.getThumbnails());
-                saveImages(shoeDetail, requestShoeDetail.getImages());
+        String result =  validateNhanVien(shoeRequest);
+        if (result != null){
+            return resultValidate(result);
+        }else {
+            try {
+                Shoe shoe = createShoe(shoeRequest);
+                for (ShoeDetail requestShoeDetail : shoeRequest.getShoeDetailList()) {
+                    ShoeDetail shoeDetail = createShoeDetail(shoe, requestShoeDetail);
+                    saveThumbnails(shoeDetail, requestShoeDetail.getThumbnails());
+                    saveImages(shoeDetail, requestShoeDetail.getImages());
+                }
+                return new ServiceResult<>(AppConstant.SUCCESS, "Shoe added successfully", shoe);
+            } catch (Exception e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new ServiceResult<>(AppConstant.BAD_REQUEST, e.getMessage(), null);
             }
-            return new ServiceResult<>(AppConstant.SUCCESS, "Shoe added successfully", shoe);
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new ServiceResult<>(AppConstant.BAD_REQUEST, e.getMessage(), null);
         }
+
     }
 
     private Shoe createShoe(ShoeRequest shoeRequest) {
@@ -216,7 +247,7 @@ public class ShoeServiceImpl implements IShoeService {
         Float sizeName = optionalSize.get().getName();
         String shoeName = shoe.getName();
         String colorName = optionalColor.get().getName();
-        shoeDetail.setCode(shoeName.toLowerCase() + " - " + colorName.toLowerCase()+ " - " +sizeName);
+        shoeDetail.setCode(shoeName.toLowerCase() + " - " + colorName.toLowerCase() + " - " + sizeName);
         return shoeDetailRepository.save(shoeDetail);
     }
 

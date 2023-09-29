@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "VoucherOrder")
+@Table(name = "voucherorder")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,39 +25,39 @@ import java.time.LocalDateTime;
 public class VoucherOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "Code")
+    @Column(name = "code")
     private String code;
 
-    @Column(name = "Name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "Quantity")
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "DiscountAmount")
+    @Column(name = "discountamount")
     private BigDecimal discountAmount;
 
-    @Column(name = "MinBillValue")
+    @Column(name = "minbillvalue")
     private BigDecimal minBillValue;
 
-    @Column(name = "StartDate")
+    @Column(name = "startdate")
     private LocalDateTime startDate;
 
-    @Column(name = "EndDate")
+    @Column(name = "enddate")
     private LocalDateTime endDate;
 
-    @Column(name = "CreateDate")
+    @Column(name = "createdate")
     private LocalDateTime createDate;
 
-    @Column(name = "UpdateAt")
+    @Column(name = "updateat")
     private LocalDateTime updateAt;
 
-    @Column(name = "ReduceForm")
+    @Column(name = "reduceform")
     private String reduceForm;
 
-    @Column(name = "Status")
+    @Column(name = "status")
     private Integer status;
 }

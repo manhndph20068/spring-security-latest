@@ -115,7 +115,7 @@ public class VoucherServiceImpl implements IVoucherOrderService {
     }
 
     @Override
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 60000)
     public void updateVoucherStatus() {
         List<VoucherOrder> vouchers = voucherOrderRepository.findAll();
         LocalDateTime currentDateTime = LocalDateTime.now();
