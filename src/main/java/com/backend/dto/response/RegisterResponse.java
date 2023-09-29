@@ -1,16 +1,17 @@
-package com.backend.dto.request;
+package com.backend.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshTokenRequest {
-
-    private String token;
+@Builder
+public class RegisterResponse {
+    private String name;
+    private String email;
 }

@@ -12,27 +12,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "role")
+@Table(name = "Size")
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Role {
+public class Size {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "name")
-    private String name;
+    private Float name;
 
+    @Column(name = "createdat")
+    private Date createdAt;
 
-    public Role(String name) {
-        this.name = name;
-    }
+    @Column(name = "updatedat")
+    private Date updatedAt;
+
+    @Column(name = "status")
+    private Integer status;
+
+    @OneToMany(mappedBy = "size")
+    private List<ShoeDetail> shoeDetails;
 }

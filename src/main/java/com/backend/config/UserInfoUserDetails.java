@@ -18,7 +18,7 @@ public class UserInfoUserDetails implements UserDetails {
     public UserInfoUserDetails(Account userInfo) {
     name = userInfo.getEmail();
     password = userInfo.getPassword();
-    authorities = Arrays.stream(userInfo.getRole().getName().split(","))  // Giả sử getName() trả về danh sách các roles tách bằng dấu ","
+    authorities = Arrays.stream(userInfo.getRole().getName().split(","))
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
     }

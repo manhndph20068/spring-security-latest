@@ -1,5 +1,6 @@
-package com.backend.entity;
+package com.backend.dto.response;
 
+import com.backend.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

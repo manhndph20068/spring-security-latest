@@ -67,8 +67,6 @@ public class Account {
             String roleName = roleNames.get(0);
             this.role = new Role(roleName);
         }
-
-
     }
 
 }

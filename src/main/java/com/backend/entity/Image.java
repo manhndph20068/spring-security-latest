@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,20 +21,22 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "role")
+@Table(name = "image")
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Role {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "imgurl")
+    private String imgUrl;
 
+    @Column(name = "imgname")
+    private String imgName;
 
-    public Role(String name) {
-        this.name = name;
-    }
+    @ManyToOne
+    @JoinColumn(name = "shoedetailid")
+    private ShoeDetail shoeDetail;
 }

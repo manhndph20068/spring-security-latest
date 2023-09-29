@@ -1,6 +1,5 @@
 package com.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,27 +11,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "role")
+@Table(name = "Category")
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Role {
+public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
+    @Column(name = "createdat")
+    private Date createdAt;
 
-    public Role(String name) {
-        this.name = name;
-    }
+    @Column(name = "updatedat")
+    private Date updatedAt;
+
+    @Column(name = "status")
+    private Integer status;
+
+    @OneToMany(mappedBy = "category")
+    private List<ShoeDetail> shoeDetails;
 }

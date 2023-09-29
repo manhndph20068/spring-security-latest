@@ -5,11 +5,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,11 @@ import java.util.function.Function;
 @Component
 public class JwtService {
 
+    @Value("${jwt.secret-key}")
+    private String SECRET_KEY;
+
+    @Value("${jwt.refresh-token-expiration-time-seconds}")
+    private int REFRESH_TOKEN_EXPIRATION_TIME_SECONDS;
 
     public static final String SECRET = "SECRETKEYACCESSTOKENSECRETKEYACCESSTOKENSECRETKEYACCESSTOKEN";
 
@@ -79,15 +87,17 @@ public class JwtService {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes= Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes= Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
 //refresh token
 
 
-    private static final String SECRET_KEY = "SECRETKEYREFRESHTOKENSECRETKEYREFRESHTOKENSECRETKEYREFRESHTOKEN";
-    public static final int REFRESH_TOKEN_EXPIRATION_TIME_SECONDS = 86400;
+//    private static final String SECRET_KEY = "SECRETKEYREFRESHTOKENSECRETKEYREFRESHTOKENSECRETKEYREFRESHTOKEN";
+//    public static final int REFRESH_TOKEN_EXPIRATION_TIME_SECONDS = 86400;
+
+
 
     public String generateRefreshToken(String username) {
         Map<String, Object> claims = new HashMap<>();

@@ -1,12 +1,13 @@
 package com.backend.controller;
 
+import com.backend.ServiceResult;
 import com.backend.config.AppConstant;
 import com.backend.config.UserInfoUserDetailsService;
 import com.backend.dto.request.AuthRequest;
 import com.backend.dto.response.JwtResponse;
 import com.backend.dto.Product;
 import com.backend.dto.request.RegisterRequest;
-import com.backend.entity.RefreshToken;
+import com.backend.dto.response.RefreshToken;
 import com.backend.entity.Account;
 import com.backend.repository.AccountRepository;
 import com.backend.service.IAccountService;
@@ -66,7 +67,13 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseEntity<?> addNewUser(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(iAccountService.register(registerRequest));
+        Boolean isExits = iAccountService.exitsEmail(registerRequest);
+        if (isExits) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ServiceResult<>(AppConstant.BAD_REQUEST,"Email already exists"));
+        }else {
+            return ResponseEntity.ok(iAccountService.register(registerRequest));
+        }
+
     }
 
     @GetMapping("/all")
@@ -119,7 +126,6 @@ public class AuthController {
         }
     }
 
-
     @PostMapping( "/refreshToken")
     public JwtResponse refreshToken(HttpServletRequest request) {
             String refreshTokenFromCookie = refreshTokenService.getRefreshTokenFromCookie(request);
@@ -153,7 +159,6 @@ public class AuthController {
     }
 
 
-
     @GetMapping("/fetchAccount")
     public ResponseEntity<Object> fetchAccountInfo(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -176,8 +181,6 @@ public class AuthController {
     }
 
 
-
-
     @PostMapping("/logout")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> logout(HttpServletResponse response) {
@@ -190,6 +193,4 @@ public class AuthController {
                 .message("User logged out successfully")
                 .build());
     }
-
-
 }
