@@ -36,9 +36,9 @@ public class SecurityConfig  {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/products/signUp", "/products/login", "/products/refreshToken",
-                        "/products/fetchAccount","/images/avatar/**").permitAll()
-                .antMatchers("/products/**").authenticated()
+                .antMatchers("/api/v1/auth/signUp", "/api/v1/auth/login", "/api/v1/auth/refreshToken",
+                        "/api/v1/auth/fetchAccount","/images/avatar/**").permitAll()
+                .antMatchers("/api/v1/auth/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

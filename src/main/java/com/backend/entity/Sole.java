@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "sole")
+@Table(name = "Sole")
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sole {
