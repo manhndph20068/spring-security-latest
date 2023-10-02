@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class VoucherServiceImpl implements IVoucherOrderService {
@@ -31,37 +32,58 @@ public class VoucherServiceImpl implements IVoucherOrderService {
 
     public ServiceResult<VoucherOrderResponse> validateVoucher(VoucherOrderRequest voucherOrderRequest) {
         List<String> errorMessages = new ArrayList<>();
-        if (voucherOrderRequest.getCode() == null || voucherOrderRequest.getName() == null) {
-            return result("Dữ liệu không được để trống");
+
+        //Validate trống
+        if (voucherOrderRequest.getCode() == null) {
+            return result("Code không được để trống");
         }
+        if (voucherOrderRequest.getName() == null) {
+            return result("Name không được để trống");
+        }
+        if (voucherOrderRequest.getQuantity() == null) {
+            return result("Quantity không được để trống");
+        }
+        if (voucherOrderRequest.getDiscountAmount() == null) {
+            return result("Discount amount không được để trống");
+        }
+        if (voucherOrderRequest.getMinBillValue() == null) {
+            return result("Min bill value không được để trống");
+        }
+        if (voucherOrderRequest.getStartDate() == null) {
+            return result("Start date không được để trống");
+        }
+        if (voucherOrderRequest.getEndDate() == null) {
+            return result("End date không được để trống");
+        }
+        if (voucherOrderRequest.getReduceForm() == null) {
+            return result("Reduce form không được để trống");
+        }
+
         return null;
     }
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
-
-    public static String generateRandomString(int length) {
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomIndex = RANDOM.nextInt(CHARACTERS.length());
-            char randomChar = CHARACTERS.charAt(randomIndex);
-            sb.append(randomChar);
-        }
-        return sb.toString();
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ServiceResult<VoucherOrderResponse> addVoucher(VoucherOrderRequest voucherOrderRequest) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        String randomString = generateRandomString(10);
+
+        // Tạo một UUID mới
+        UUID uuid = UUID.randomUUID();
+
+        // Lấy giá trị chuỗi của UUID
+        String randomString = uuid.toString();
+
+        // Cắt chuỗi UUID để sử dụng một phần cụ thể, ví dụ: 8 ký tự đầu
+        String cutRandomString = randomString.substring(0, 8);
+
         VoucherOrder voucherHoaDon = new VoucherOrder();
         ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
         try {
             if (validationResult != null) {
                 return validationResult;
             } else {
-                voucherHoaDon.setCode(randomString);
+                voucherHoaDon.setCode("Code voucher " + cutRandomString);
                 voucherHoaDon.setName(voucherOrderRequest.getName());
                 voucherHoaDon.setQuantity(voucherOrderRequest.getQuantity());
                 voucherHoaDon.setDiscountAmount(voucherOrderRequest.getDiscountAmount());
@@ -76,11 +98,12 @@ public class VoucherServiceImpl implements IVoucherOrderService {
             }
         } catch (Exception e) {
             // Xảy ra lỗi, gọi rollback để hoàn tác các thay đổi
-            VoucherOrderResponse convertVoucherOrderResponse=convertToResponse(voucherHoaDon);
+            VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new ServiceResult<>(AppConstant.FAIL, e.getMessage(), convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
+            return new ServiceResult<>(AppConstant.FAIL, "Thêm thất bại", convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
         }
-        return new ServiceResult<>(AppConstant.SUCCESS, "Them thanh cong", null);
+        VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
+        return new ServiceResult<>(AppConstant.SUCCESS, "Thêm thành công", convertVoucherOrderResponse);
     }
 
     @Override
@@ -88,30 +111,35 @@ public class VoucherServiceImpl implements IVoucherOrderService {
     public ServiceResult<VoucherOrderResponse> updateVoucher(VoucherOrderRequest voucherOrderRequest, Long id) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         Optional<VoucherOrder> optionalVoucherHoaDon = voucherOrderRepository.findById(id);
-        VoucherOrder voucherHoaDon = optionalVoucherHoaDon.get();
-        try {
-            if (optionalVoucherHoaDon.isPresent()) {
-                voucherHoaDon.setName(voucherOrderRequest.getName());
-                voucherHoaDon.setQuantity(voucherOrderRequest.getQuantity());
-                voucherHoaDon.setDiscountAmount(voucherOrderRequest.getDiscountAmount());
-                voucherHoaDon.setMinBillValue(voucherOrderRequest.getMinBillValue());
-                voucherHoaDon.setStartDate(voucherOrderRequest.getStartDate());
-                voucherHoaDon.setEndDate(voucherOrderRequest.getEndDate());
-                voucherHoaDon.setUpdateAt(currentDateTime);
-                voucherHoaDon.setReduceForm(voucherOrderRequest.getReduceForm());
-                voucherHoaDon.setStatus(0);
-                voucherHoaDon=voucherOrderRepository.save(voucherHoaDon);
-            } else {
-                throw new RuntimeException("Id không tồn tại");
+        if (optionalVoucherHoaDon.isPresent()) {
+            VoucherOrder voucherHoaDon = optionalVoucherHoaDon.get();
+            ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
+            try {
+                if (validationResult != null) {
+                    return validationResult;
+                } else {
+                    voucherHoaDon.setName(voucherOrderRequest.getName());
+                    voucherHoaDon.setQuantity(voucherOrderRequest.getQuantity());
+                    voucherHoaDon.setDiscountAmount(voucherOrderRequest.getDiscountAmount());
+                    voucherHoaDon.setMinBillValue(voucherOrderRequest.getMinBillValue());
+                    voucherHoaDon.setStartDate(voucherOrderRequest.getStartDate());
+                    voucherHoaDon.setEndDate(voucherOrderRequest.getEndDate());
+                    voucherHoaDon.setUpdateAt(currentDateTime);
+                    voucherHoaDon.setReduceForm(voucherOrderRequest.getReduceForm());
+                    voucherHoaDon.setStatus(0);
+                    voucherHoaDon = voucherOrderRepository.save(voucherHoaDon);
+                }
+            } catch (Exception e) {
+                // Xảy ra lỗi, gọi rollback để hoàn tác các thay đổi
+                VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new ServiceResult<>(AppConstant.FAIL, e.getMessage(), convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
             }
-        } catch (Exception e) {
-            // Xảy ra lỗi, gọi rollback để hoàn tác các thay đổi
-            VoucherOrderResponse convertVoucherOrderResponse=convertToResponse(voucherHoaDon);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new ServiceResult<>(AppConstant.FAIL, e.getMessage(), convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
+            VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
+            return new ServiceResult<>(AppConstant.SUCCESS, "Sửa thành công", convertVoucherOrderResponse);
+        } else {
+            return new ServiceResult<>(AppConstant.FAIL, "Id không tồn tại", null);
         }
-        VoucherOrderResponse convertVoucherOrderResponse=convertToResponse(voucherHoaDon);
-        return new ServiceResult<>(AppConstant.SUCCESS, "Sua thanh cong", convertVoucherOrderResponse);
     }
 
     @Override
