@@ -4,15 +4,23 @@ import com.backend.ServiceResult;
 import com.backend.config.AppConstant;
 import com.backend.dto.request.VoucherOrderRequest;
 import com.backend.dto.response.VoucherOrderResponse;
+import com.backend.dto.response.shoedetail.DataPaginate;
+import com.backend.dto.response.shoedetail.Meta;
+import com.backend.dto.response.shoedetail.ResultItem;
+import com.backend.entity.ShoeDetail;
 import com.backend.entity.VoucherOrder;
 import com.backend.repository.VoucherOrderRepository;
 import com.backend.service.IVoucherOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.persistence.Tuple;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -91,7 +99,7 @@ public class VoucherServiceImpl implements IVoucherOrderService {
                 voucherHoaDon.setStartDate(voucherOrderRequest.getStartDate());
                 voucherHoaDon.setEndDate(voucherOrderRequest.getEndDate());
                 voucherHoaDon.setCreateDate(currentDateTime);
-                voucherHoaDon.setUpdateAt(null);
+                voucherHoaDon.setUpdateAt(currentDateTime);
                 voucherHoaDon.setReduceForm(voucherOrderRequest.getReduceForm());
                 voucherHoaDon.setStatus(0);
                 voucherHoaDon = voucherOrderRepository.save(voucherHoaDon);
@@ -179,5 +187,49 @@ public class VoucherServiceImpl implements IVoucherOrderService {
                 .reduceForm(voucherOrder.getReduceForm())
                 .status(voucherOrder.getStatus())
                 .build();
+    }
+
+    @Override
+    public ServiceResult<List<DataPaginate>> getAllVoucherOrder(int page, int size) {
+        Page<VoucherOrder> voucherOrders = voucherOrderRepository.findAll(PageRequest.of(page, size));
+
+        int current = voucherOrders.getNumber();
+        int pageSize = voucherOrders.getSize();
+        int pages = voucherOrders.getTotalPages();
+        long total = voucherOrders.getTotalElements();
+
+        Meta meta = new Meta();
+        meta.setCurrent(current);
+        meta.setPageSize(pageSize);
+        meta.setPages(pages);
+        meta.setTotal(total);
+
+        List<VoucherOrderResponse> voucherOrderResponses=new ArrayList<>();
+
+        for (VoucherOrder voucherOrder:voucherOrders){
+            VoucherOrderResponse voucherOrderResponse=new VoucherOrderResponse();
+            voucherOrderResponse.setCode(voucherOrder.getCode());
+            voucherOrderResponse.setName(voucherOrder.getName());
+            voucherOrderResponse.setQuantity(voucherOrder.getQuantity());
+            voucherOrderResponse.setDiscountAmount(voucherOrder.getDiscountAmount());
+            voucherOrderResponse.setMinBillValue(voucherOrder.getMinBillValue());
+            voucherOrderResponse.setStartDate(voucherOrder.getStartDate());
+            voucherOrderResponse.setEndDate(voucherOrder.getEndDate());
+            voucherOrderResponse.setCreateDate(voucherOrder.getCreateDate());
+            voucherOrderResponse.setUpdateAt(voucherOrder.getUpdateAt());
+            voucherOrderResponse.setReduceForm(voucherOrder.getReduceForm());
+            voucherOrderResponse.setStatus(voucherOrder.getStatus());
+
+            voucherOrderResponses.add(voucherOrderResponse);
+        }
+
+        DataPaginate dataPaginate = new DataPaginate();
+        dataPaginate.setMeta(meta);
+        dataPaginate.setVoucherOrderResponses(voucherOrderResponses);
+
+        return new ServiceResult(AppConstant.SUCCESS,
+                "Successfully retrieved",
+               dataPaginate
+        );
     }
 }
