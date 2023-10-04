@@ -13,6 +13,8 @@ import java.util.List;
 
 @Repository
 public interface VoucherOrderRepository extends JpaRepository<VoucherOrder, Long> {
-    @Query(value = "SELECT v.code,v.name, v.quantity, v.discountamount, v.minbillvalue, v.startdate, v.enddate ,v.createdate ,v.updateat ,v.reduceform ,v.status FROM voucherorder v ",nativeQuery = true)
-    Page<Tuple> getAllVoucherOrder(Pageable pageable);
+    @Query(value = "SELECT v.id,v.code,v.name, v.quantity, v.discountamount, v.minbillvalue, v.startdate, v.enddate ,v.createdate ,v.updateat ,v.reduceform ,v.status\n" +
+            "FROM voucherorder v \n" +
+            "WHERE v.status in(0,1,2)",nativeQuery = true)
+    Page<VoucherOrder> getAllVoucherOrder(Pageable pageable);
 }

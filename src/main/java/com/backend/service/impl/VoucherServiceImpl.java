@@ -67,6 +67,8 @@ public class VoucherServiceImpl implements IVoucherOrderService {
             return result("Reduce form không được để trống");
         }
 
+        // Nếu không có lỗi, trả về một ServiceResult thành công với dữ liệu rỗng
+        //return new ServiceResult<>(AppConstant.SUCCESS, "Dữ liệu hợp lệ", null);
         return null;
     }
 
@@ -86,8 +88,8 @@ public class VoucherServiceImpl implements IVoucherOrderService {
         String cutRandomString = randomString.substring(0, 8);
 
         VoucherOrder voucherHoaDon = new VoucherOrder();
-        ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
         try {
+            ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
             if (validationResult != null) {
                 return validationResult;
             } else {
@@ -108,10 +110,10 @@ public class VoucherServiceImpl implements IVoucherOrderService {
             // Xảy ra lỗi, gọi rollback để hoàn tác các thay đổi
             VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new ServiceResult<>(AppConstant.FAIL, "Thêm thất bại", convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
+            return new ServiceResult<>(AppConstant.FAIL, "Add thất bại", convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
         }
         VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
-        return new ServiceResult<>(AppConstant.SUCCESS, "Thêm thành công", convertVoucherOrderResponse);
+        return new ServiceResult<>(AppConstant.SUCCESS, "Add thành công", convertVoucherOrderResponse);
     }
 
     @Override
@@ -121,8 +123,8 @@ public class VoucherServiceImpl implements IVoucherOrderService {
         Optional<VoucherOrder> optionalVoucherHoaDon = voucherOrderRepository.findById(id);
         if (optionalVoucherHoaDon.isPresent()) {
             VoucherOrder voucherHoaDon = optionalVoucherHoaDon.get();
-            ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
             try {
+                ServiceResult<VoucherOrderResponse> validationResult = validateVoucher(voucherOrderRequest);
                 if (validationResult != null) {
                     return validationResult;
                 } else {
@@ -144,7 +146,7 @@ public class VoucherServiceImpl implements IVoucherOrderService {
                 return new ServiceResult<>(AppConstant.FAIL, e.getMessage(), convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
             }
             VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
-            return new ServiceResult<>(AppConstant.SUCCESS, "Sửa thành công", convertVoucherOrderResponse);
+            return new ServiceResult<>(AppConstant.SUCCESS, "Update thành công", convertVoucherOrderResponse);
         } else {
             return new ServiceResult<>(AppConstant.FAIL, "Id không tồn tại", null);
         }
@@ -161,14 +163,17 @@ public class VoucherServiceImpl implements IVoucherOrderService {
                 // Bỏ qua voucher này nếu có startDate hoặc endDate là null
                 continue;
             }
-            if (currentDateTime.isAfter(voucher.getStartDate()) && currentDateTime.isBefore(voucher.getEndDate())) {
-                voucher.setStatus(1); // Cập nhật thành "đã kích hoạt"
-            } else if (currentDateTime.isAfter(voucher.getEndDate())) {
-                voucher.setStatus(2); // Cập nhật thành "hết hạn"
-            } else {
-                voucher.setStatus(0);
+            if (voucher.getStatus() != 3) {
+                // Chỉ cập nhật status nếu status hiện tại không phải là 4
+                if (currentDateTime.isAfter(voucher.getStartDate()) && currentDateTime.isBefore(voucher.getEndDate())) {
+                    voucher.setStatus(1); // Cập nhật thành "đã kích hoạt"
+                } else if (currentDateTime.isAfter(voucher.getEndDate())) {
+                    voucher.setStatus(2); // Cập nhật thành "hết hạn"
+                } else {
+                    voucher.setStatus(0);
+                }
+                voucherOrderRepository.save(voucher);
             }
-            voucherOrderRepository.save(voucher);
         }
     }
 
@@ -191,7 +196,7 @@ public class VoucherServiceImpl implements IVoucherOrderService {
 
     @Override
     public ServiceResult<List<DataPaginate>> getAllVoucherOrder(int page, int size) {
-        Page<VoucherOrder> voucherOrders = voucherOrderRepository.findAll(PageRequest.of(page, size));
+        Page<VoucherOrder> voucherOrders = voucherOrderRepository.getAllVoucherOrder(PageRequest.of(page, size));
 
         int current = voucherOrders.getNumber();
         int pageSize = voucherOrders.getSize();
@@ -204,10 +209,11 @@ public class VoucherServiceImpl implements IVoucherOrderService {
         meta.setPages(pages);
         meta.setTotal(total);
 
-        List<VoucherOrderResponse> voucherOrderResponses=new ArrayList<>();
+        List<VoucherOrderResponse> voucherOrderResponses = new ArrayList<>();
 
-        for (VoucherOrder voucherOrder:voucherOrders){
-            VoucherOrderResponse voucherOrderResponse=new VoucherOrderResponse();
+        for (VoucherOrder voucherOrder : voucherOrders) {
+            VoucherOrderResponse voucherOrderResponse = new VoucherOrderResponse();
+            voucherOrderResponse.setId(voucherOrder.getId());
             voucherOrderResponse.setCode(voucherOrder.getCode());
             voucherOrderResponse.setName(voucherOrder.getName());
             voucherOrderResponse.setQuantity(voucherOrder.getQuantity());
@@ -229,7 +235,30 @@ public class VoucherServiceImpl implements IVoucherOrderService {
 
         return new ServiceResult(AppConstant.SUCCESS,
                 "Successfully retrieved",
-               dataPaginate
+                dataPaginate
         );
+    }
+
+    @Override
+    public ServiceResult<VoucherOrderResponse> deleteVoucher(Long id) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        Optional<VoucherOrder> optionalVoucherHoaDon = voucherOrderRepository.findById(id);
+        if (optionalVoucherHoaDon.isPresent()) {
+            VoucherOrder voucherHoaDon = optionalVoucherHoaDon.get();
+            try {
+                voucherHoaDon.setUpdateAt(currentDateTime);
+                voucherHoaDon.setStatus(3);
+                voucherHoaDon = voucherOrderRepository.save(voucherHoaDon);
+            } catch (Exception e) {
+                // Xảy ra lỗi, gọi rollback để hoàn tác các thay đổi
+                VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new ServiceResult<>(AppConstant.FAIL, e.getMessage(), convertVoucherOrderResponse); // hoặc xử lý lỗi một cách thích hợp dựa trên nhu cầu của bạn
+            }
+            VoucherOrderResponse convertVoucherOrderResponse = convertToResponse(voucherHoaDon);
+            return new ServiceResult<>(AppConstant.SUCCESS, "Delete thành công", convertVoucherOrderResponse);
+        } else {
+            return new ServiceResult<>(AppConstant.FAIL, "Id không tồn tại", null);
+        }
     }
 }

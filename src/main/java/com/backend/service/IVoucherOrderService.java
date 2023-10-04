@@ -20,4 +20,6 @@ public interface IVoucherOrderService {
     VoucherOrderResponse convertToResponse(VoucherOrder voucherOrder);
 
     ServiceResult<List<DataPaginate>> getAllVoucherOrder(int page, int size);
+
+    ServiceResult<VoucherOrderResponse> deleteVoucher(Long id);
 }
