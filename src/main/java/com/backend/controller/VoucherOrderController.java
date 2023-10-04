@@ -30,6 +30,11 @@ public class VoucherOrderController {
         return ResponseEntity.ok(voucherOrderService.updateVoucher(voucherOrderRequest,id));
     }
 
+    @GetMapping("/deleteVoucherOrder/{id}")
+    public ResponseEntity<?> deleteVoucherOrder(@PathVariable(name = "id")Long id) {
+        return ResponseEntity.ok(voucherOrderService.deleteVoucher(id));
+    }
+
     @GetMapping("/getAllVoucherOrder")
     public ResponseEntity<?> getAllVoucherOrder(@RequestParam(defaultValue = "0") Integer page,
                                                           @RequestParam(defaultValue = "2") Integer size){
