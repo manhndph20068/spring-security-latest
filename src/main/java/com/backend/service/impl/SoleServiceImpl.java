@@ -33,7 +33,7 @@ public class SoleServiceImpl implements ISoleService {
     public ServiceResult<List<SoleResponse>> getAll() {
         List<Sole> soleList = soleRepository.findAll();
         List<SoleResponse> soleResponses = convertToRes(soleList);
-        return new ServiceResult<>(AppConstant.SUCCESS, "SoleList",soleResponses);
+        return new ServiceResult<>(AppConstant.SUCCESS, "Get list Sole",soleResponses);
     }
 
     @Override
