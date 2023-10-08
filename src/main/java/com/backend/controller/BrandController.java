@@ -28,5 +28,5 @@ public class BrandController {
     public ResponseEntity<?> addNewBrand(@RequestBody BrandRequest brandRequest){
         return ResponseEntity.ok(iBrandService.addNewBrand(brandRequest));
     }
-    //check github
+
 }
