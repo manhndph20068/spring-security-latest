@@ -7,16 +7,10 @@ import com.backend.dto.response.ShoeResponse;
 import com.backend.dto.response.shoedetail.DataPaginate;
 import com.backend.dto.response.shoedetail.Meta;
 import com.backend.dto.response.shoedetail.ResultItem;
-import com.backend.entity.Brand;
-import com.backend.entity.Category;
-import com.backend.entity.Color;
 import com.backend.entity.Image;
 import com.backend.entity.Shoe;
 import com.backend.entity.ShoeDetail;
-import com.backend.entity.Size;
-import com.backend.entity.Sole;
-import com.backend.entity.Thumbnail;
-import com.backend.repository.BrandCategory;
+import com.backend.repository.BrandRepository;
 import com.backend.repository.CategoryRepository;
 import com.backend.repository.ColorRepository;
 import com.backend.repository.ImageRepository;
@@ -27,26 +21,13 @@ import com.backend.repository.SoleRepository;
 import com.backend.repository.ThumbnailRepository;
 import com.backend.service.IShoeService;
 import com.backend.service.ImageUploadService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -81,7 +62,7 @@ public class ShoeServiceImpl implements IShoeService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private BrandCategory brandCategory;
+    private BrandRepository brandCategory;
 
     @Autowired
     private SoleRepository soleRepository;

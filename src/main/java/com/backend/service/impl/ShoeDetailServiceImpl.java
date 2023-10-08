@@ -3,7 +3,6 @@ package com.backend.service.impl;
 import com.backend.ServiceResult;
 import com.backend.config.AppConstant;
 import com.backend.dto.request.ShoeDetailRequest;
-import com.backend.dto.request.ShoeRequest;
 import com.backend.entity.Brand;
 import com.backend.entity.Category;
 import com.backend.entity.Color;
@@ -13,7 +12,7 @@ import com.backend.entity.ShoeDetail;
 import com.backend.entity.Size;
 import com.backend.entity.Sole;
 import com.backend.entity.Thumbnail;
-import com.backend.repository.BrandCategory;
+import com.backend.repository.BrandRepository;
 import com.backend.repository.CategoryRepository;
 import com.backend.repository.ColorRepository;
 import com.backend.repository.ImageRepository;
@@ -73,7 +72,7 @@ public class ShoeDetailServiceImpl implements IShoeDetailService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private BrandCategory brandCategory;
+    private BrandRepository brandCategory;
 
     @Autowired
     private SoleRepository soleRepository;

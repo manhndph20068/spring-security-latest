@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ServiceResult<List<CategoryResponse>> getAllByAdmin() {
+    public ServiceResult<List<CategoryResponse>> getAll() {
         List<Category> categoryList = categoryRepository.findAll();
         List<CategoryResponse> categoryResponses = convertToRes(categoryList);
         return new ServiceResult<>(AppConstant.SUCCESS, "Category",categoryResponses);
