@@ -1,32 +1,29 @@
-package com.backend.dto.request;
+package com.backend.dto.response;
 
-import com.backend.entity.ShoeDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class ShoeRequest {
+@Builder
+public class ShoeResponse {
+    private Long id;
+
     private String name;
 
     private Date createdAt;
 
     private Date updatedAt;
 
-    private Integer statusShoe;
-
-    private List<ShoeDetail> shoeDetailList;
-
-//    private String thumbnail;
-//
-//    private List<String> imageList;
+    private Integer status;
 }

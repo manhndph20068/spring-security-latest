@@ -63,6 +63,9 @@ public class ShoeDetail {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "qrcode")
+    private String qrCode;
+
     @Column(name = "priceinput")
     private BigDecimal priceInput;
 

@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -25,8 +27,11 @@ public class ResultItem {
     private String sole;
     private String color;
     private String code;
+    private String qrCode;
     private BigDecimal priceInput;
     private Integer qty;
+    private Date createdAt;
+    private Date updatedAt;
     private String thumbnail;
     private List<String> images;
 }
