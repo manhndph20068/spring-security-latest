@@ -1,5 +1,6 @@
 package com.backend.dto.response.shoedetail;
 
+import com.backend.dto.response.VoucherOrderResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +19,5 @@ import java.util.List;
 public class DataPaginate {
     private Meta meta;
     private List<ResultItem> result;
+    private List<VoucherOrderResponse> voucherOrderResponses;
 }
