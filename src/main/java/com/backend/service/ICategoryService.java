@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface ICategoryService {
-    ServiceResult<List<CategoryResponse>> getAllByAdmin();
+    ServiceResult<List<CategoryResponse>> getAll();
 
     ServiceResult<CategoryResponse> addNewCategory(CategoryRequest categoryRequest);
 }

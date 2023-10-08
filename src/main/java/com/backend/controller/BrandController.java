@@ -1,7 +1,8 @@
 package com.backend.controller;
 
+import com.backend.dto.request.BrandRequest;
 import com.backend.dto.request.CategoryRequest;
-import com.backend.dto.request.ShoeRequest;
+import com.backend.service.IBrandService;
 import com.backend.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/category")
-public class CategoryController {
-    @Autowired
-    private ICategoryService iCategoryService;
+@RequestMapping("/api/v1/brand")
+public class BrandController {
 
-    @GetMapping("/getAllCategory")
-    public ResponseEntity<?> getCategory() {
-        return ResponseEntity.ok(iCategoryService.getAll());
+    @Autowired
+    private IBrandService iBrandService;
+
+    @GetMapping("/getAllBrand")
+    public ResponseEntity<?> getAllBrand() {
+        return ResponseEntity.ok(iBrandService.getAll());
     }
 
-    @PostMapping("/addNewCategory")
-    public ResponseEntity<?> addNewCategory(@RequestBody CategoryRequest categoryRequest){
-        return ResponseEntity.ok(iCategoryService.addNewCategory(categoryRequest));
+    @PostMapping("/addNewBrand")
+    public ResponseEntity<?> addNewBrand(@RequestBody BrandRequest brandRequest){
+        return ResponseEntity.ok(iBrandService.addNewBrand(brandRequest));
     }
 }
