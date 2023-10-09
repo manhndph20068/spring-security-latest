@@ -56,7 +56,7 @@ public class VoucherOrder {
     private LocalDateTime updateAt;
 
     @Column(name = "reduceform")
-    private String reduceForm;
+    private Integer reduceForm;
 
     @Column(name = "status")
     private Integer status;
