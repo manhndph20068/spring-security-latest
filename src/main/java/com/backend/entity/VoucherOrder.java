@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "voucherorder")
+@Table(name = "voucher")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,25 +37,25 @@ public class VoucherOrder {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "discountamount")
+    @Column(name = "discount_amount")
     private BigDecimal discountAmount;
 
-    @Column(name = "minbillvalue")
+    @Column(name = "min_order_value")
     private BigDecimal minBillValue;
 
-    @Column(name = "startdate")
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "enddate")
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    @Column(name = "createdate")
+    @Column(name = "created_time")
     private LocalDateTime createDate;
 
-    @Column(name = "updateat")
+    @Column(name = "updated_time")
     private LocalDateTime updateAt;
 
-    @Column(name = "reduceform")
+    @Column(name = "reduce_form")
     private String reduceForm;
 
     @Column(name = "status")
