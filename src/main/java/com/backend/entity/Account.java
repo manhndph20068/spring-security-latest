@@ -46,10 +46,10 @@ public class Account {
     @Column(name = "avatar")
     private String avatar;
 
-    @Column(name = "createdat")
+    @Column(name = "created_time")
     private Date createdAt;
 
-    @Column(name = "updatedat")
+    @Column(name = "updated_time")
     private Date updatedAt;
 
     @Column(name = "status")
@@ -57,7 +57,7 @@ public class Account {
 
 
     @ManyToOne
-    @JoinColumn(name = "roleid")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public Account(Integer id, String name, String email, String password, Role role, Collection<? extends GrantedAuthority> authorities) {
