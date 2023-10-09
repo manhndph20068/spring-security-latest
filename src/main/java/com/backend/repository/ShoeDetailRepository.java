@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Tuple;
+import java.util.List;
 
 @Repository
 public interface ShoeDetailRepository extends JpaRepository<ShoeDetail, Long> {
@@ -23,4 +24,19 @@ public interface ShoeDetailRepository extends JpaRepository<ShoeDetail, Long> {
             "join Size size on size.Id = sd.SizeId\n" +
             "join Thumbnail thumbnail on thumbnail.ShoeDetailId = sd.Id", nativeQuery = true)
     Page<Tuple> getAllShoeDetail(Pageable pageable);
+
+    Page<ShoeDetail> findByShoe_NameContainingAndSize_NameAndBrand_NameContaining(String nameShoe,Float sizeShoe,
+                                                                                String brandShoe, Pageable pageable);
+
+    Page<ShoeDetail> findByShoe_NameContainingAndSize_Name(String nameShoe,Float sizeShoe, Pageable pageable);
+
+    Page<ShoeDetail> findByShoe_NameContainingAndBrand_NameContaining(String nameShoe, String brandShoe, Pageable pageable);
+
+    Page<ShoeDetail> findBySize_NameAndBrand_NameContaining(Float sizeShoe, String brandShoe, Pageable pageable);
+
+    Page<ShoeDetail> findByShoe_NameContaining(String nameShoe, Pageable pageable);
+
+    Page<ShoeDetail> findBySize_Name(Float sizeShoe, Pageable pageable);
+
+    Page<ShoeDetail> findByBrand_NameContaining(String brandShoe, Pageable pageable);
 }

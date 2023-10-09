@@ -1,5 +1,6 @@
 package com.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -36,10 +38,10 @@ public class Shoe {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdat")
+    @Column(name = "created_time")
     private Date createdAt;
 
-    @Column(name = "updatedat")
+    @Column(name = "updated_time")
     private Date updatedAt;
 
     @Column(name = "status")

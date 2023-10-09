@@ -34,10 +34,10 @@ public class Brand {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdat")
+    @Column(name = "created_time")
     private Date createdAt;
 
-    @Column(name = "updatedat")
+    @Column(name = "updated_time")
     private Date updatedAt;
 
     @Column(name = "status")

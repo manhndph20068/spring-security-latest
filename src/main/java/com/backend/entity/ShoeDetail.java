@@ -26,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "shoedetail")
+@Table(name = "shoe_detail")
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShoeDetail {
@@ -37,51 +37,54 @@ public class ShoeDetail {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "shoeid")
+    @JoinColumn(name = "shoe_id")
     private Shoe shoe;
 
     @ManyToOne
-    @JoinColumn(name = "categoryid")
+    @JoinColumn(name = "category_id")
     private Category category;///
 
     @ManyToOne
-    @JoinColumn(name = "sizeid")
+    @JoinColumn(name = "size_id")
     private Size size;
 
     @ManyToOne
-    @JoinColumn(name = "colorid")
+    @JoinColumn(name = "color_id")
     private Color color;//
 
     @ManyToOne
-    @JoinColumn(name = "soleid")
+    @JoinColumn(name = "sole_id")
     private Sole sole;///
 
     @ManyToOne
-    @JoinColumn(name = "brandid")
+    @JoinColumn(name = "brand_id")
     private Brand brand;///
 
     @Column(name = "code")
     private String code;
 
-    @Column(name = "priceinput")
+    @Column(name = "qrcode")
+    private String qrCode;
+
+    @Column(name = "price")
     private BigDecimal priceInput;
 
-    @Column(name = "priceoutput")
-    private BigDecimal priceOutput;
+//    @Column(name = "priceoutput")
+//    private BigDecimal priceOutput;
 
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "createdby")
+    @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "updatedby")
+    @Column(name = "updated_by")
     private String updatedBy;
 
-    @Column(name = "createdat")
+    @Column(name = "created_time")
     private Date createdAt;
 
-    @Column(name = "updatedat")
+    @Column(name = "updated_time")
     private Date updatedAt;
 
     @Column(name = "status")

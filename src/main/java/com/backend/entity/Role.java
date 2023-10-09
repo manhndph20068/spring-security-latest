@@ -31,6 +31,9 @@ public class Role {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "status")
+    private Integer status;
+
 
     public Role(String name) {
         this.name = name;

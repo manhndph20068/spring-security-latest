@@ -30,13 +30,13 @@ public class Image {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "imgurl")
+    @Column(name = "img_url")
     private String imgUrl;
 
-    @Column(name = "imgname")
+    @Column(name = "img_name")
     private String imgName;
 
     @ManyToOne
-    @JoinColumn(name = "shoedetailid")
+    @JoinColumn(name = "shoe_detail_id")
     private ShoeDetail shoeDetail;
 }

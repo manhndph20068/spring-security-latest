@@ -2,10 +2,12 @@ package com.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,25 +17,47 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "userinfo")
+@Table(name = "account")
 public class Account {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "email")
     private String email;
+
     @JsonIgnore
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(name = "created_time")
+    private Date createdAt;
+
+    @Column(name = "updated_time")
+    private Date updatedAt;
+
+    @Column(name = "status")
+    private Integer status;
 
 
     @ManyToOne
-    @JoinColumn(name = "id_roles")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public Account(Integer id, String name, String email, String password, Role role, Collection<? extends GrantedAuthority> authorities) {
