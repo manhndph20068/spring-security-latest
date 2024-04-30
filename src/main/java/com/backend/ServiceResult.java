@@ -9,6 +9,7 @@ public class ServiceResult<T> implements Serializable {
 
     public ServiceResult() {
     }
+    
 
     public ServiceResult(int status, String message, T data) {
         this.status = status;
